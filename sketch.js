@@ -55,7 +55,7 @@ function setup() {
   // mangle
   var m_div = createDiv("m: ");
   m_text = createElement("input", type="text");
-  m_slider = createSlider(6, 1000, 1, 1);
+  m_slider = createSlider(1, 1000, 6, 1);
   m_div.id("m_div");
   m_text.parent("m_div");
   m_slider.style('width', '260px');
