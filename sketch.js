@@ -1,11 +1,11 @@
 
-// triangle number variables
-var tri_slider;
-var tri_text;
-var active_input_tri = "tri_slider";
-// call back triangle functions
-function tri_slider_press() {active_input_tri = "tri_slider"; }
-function tri_text_press() {active_input_tri = "none"; }
+// mangle number variables
+var m_slider;
+var m_text;
+var active_input_m = "m_slider";
+// call back mangle functions
+function m_slider_press() {active_input_m = "m_slider"; }
+function m_text_press() {active_input_m = "none"; }
 
 
 // base variables
@@ -38,28 +38,30 @@ function power_a_e_press() { power_a_text.value(Math.E); active_input_a_power = 
 function power_b_e_press() { power_b_text.value(Math.E); active_input_b_power = "none";}
 function power_a_pi_press() { power_a_text.value(Math.PI); active_input_a_power = "none";}
 function power_b_pi_press() { power_b_text.value(Math.PI); active_input_b_power = "none";}
-function power_a_slider_press() {active_input_a_power = "power_slider"; }
-function power_b_slider_press() {active_input_b_power = "power_slider"; }
+function power_a_slider_press() {active_input_a_power = "power_a_slider"; }
+function power_b_slider_press() {active_input_b_power = "power_b_slider"; }
 function power_a_text_press() {active_input_a_power = "none"; }
 function power_b_text_press() {active_input_b_power = "none"; }
 
 
 
-var step = 0;
+
+
+var scale = 150;
 
 function setup() {
-  createCanvas(700, 400);
+  createCanvas(800, 600);
 
-  // triangle
-  var tri_div = createDiv("Number of triangles: ");
-  tri_text = createElement("input", type="text");
-  tri_slider = createSlider(1, 100, 1, 1);
-  tri_div.id("tri_div");
-  tri_text.parent("tri_div");
-  tri_slider.style('width', '260px');
-  // tri events
-  tri_slider.mousePressed(tri_slider_press);
-  tri_text.mousePressed(tri_text_press);
+  // mangle
+  var m_div = createDiv("m: ");
+  m_text = createElement("input", type="text");
+  m_slider = createSlider(1, 500, 1, 1);
+  m_div.id("m_div");
+  m_text.parent("m_div");
+  m_slider.style('width', '260px');
+  // m events
+  m_slider.mousePressed(m_slider_press);
+  m_text.mousePressed(m_text_press);
 
 
   // base
@@ -67,7 +69,7 @@ function setup() {
   base_text = createElement("input", type="text");
   base_e_but = createButton("e");
   base_pi_but = createButton("pi");
-  base_slider = createSlider(-4, 4, 0, 0.01);
+  base_slider = createSlider(0.01, 10, Math.E, 0.01);
   base_div.id("base_div");
   base_text.parent("base_div");
   base_slider.style('width', '160px');
@@ -89,7 +91,7 @@ function setup() {
   power_a_pi_but = createButton("pi");
   power_b_pi_but = createButton("pi");
   power_a_slider = createSlider(-10, 10, 0, 0.01);
-  power_b_slider = createSlider(-10, 10, 0, 0.01);
+  power_b_slider = createSlider(-10, 10, Math.PI, 0.01);
   power_mid_text = createElement("span", " + ");
   power_end_text = createElement("span", "i)");
   power_div.id("power_div");
@@ -119,16 +121,54 @@ function setup() {
 
 }
 
-function draw() {
-  step += 0.02;
-  background(255,245,255);
-  translate(width / 2, height / 2);
+  // p for power
+function calculatePoints(base, m, p_a, p_b){
+  base = float(base);
+  m = float(m);
+  p_a = float(p_a);
+  p_b = float(p_b);
+  var point_list = [];
+  // f for first
+  var f_a = 1.0 + (p_a * Math.log(base) / m);
+  var f_b = p_b * Math.log(base) / m;
+  // r for running
+  var r_a = 1.0;
+  var r_b = 0.0;
 
+  point_list.push([r_a * 150.0, r_b* -150.0]);
+  for (var x = 0; x < m; x++){
+    [r_a, r_b] = [(r_a * f_a) - (r_b * f_b), (r_a * f_b) + (r_b * f_a)];
+
+
+
+    point_list.push([r_a * 150.0, r_b* -150.0]);
+
+  }
+  return point_list;
+
+}
+
+function draw() {
+  frameRate(900);
+  translate(width / 2, height / 2);
+  background(255,245,255);
+
+  // coordinate axes
+  line(0,-500,0,500);
+  line(-500,0,500,0);
+
+  // ticks on the axes
+  line(-150, -10, -150, 10);
+  line(150, -10, 150, 10);
+  line(-10, 150, 10, 150);
+  line(-10, -150, 10, -150);
+
+  // prioritizing input source
   if (active_input_base == "base_slider"){
     base_text.value(base_slider.value());
   }
-  if (active_input_tri == "tri_slider"){
-    tri_text.value(tri_slider.value());
+  if (active_input_m == "m_slider"){
+    m_text.value(m_slider.value());
   }
   if (active_input_a_power == "power_a_slider"){
     power_a_text.value(power_a_slider.value());
@@ -139,14 +179,38 @@ function draw() {
 
   //base_text
   var base_val = base_text.value();
-  var tri_val = tri_text.value();
-
+  var m_val = m_text.value();
+  var power_a = power_a_text.value();
+  var power_b = power_b_text.value();
 
   if (base_val == -69.420){
-    createP("abby fink hella cute");
+    createP("abby fink hElla cute");
   }
 
+  // draw input_point
+  fill(0,255,0);
+  ellipse(power_a, power_b, 5,5);
+
+  // draw curve
+  point_list = calculatePoints(base_val, m_val, power_a, power_b);
+
   noFill();
-  ellipse(base_val,0,200 * cos(step * 1.1),200*sin(step));
-  ellipse(base_val,0,200 * sin(step), 200 * cos(step * 1.1));
+  beginShape();
+  point_list.forEach(function(p) {
+  vertex(p[0], p[1]);
+
+  });
+  endShape();
+
+  //draw endpoint with text
+  var end_r, end_i;
+  [end_r, end_i] = [point_list.slice(-1)[0][0], point_list.slice(-1)[0][1]];
+  fill(255,0,0);
+  ellipse(end_r, end_i, 8, 8);
+  [end_r, end_i] = [Math.round(end_r * 100.0 / 150.0) / 100.0, Math.round(end_i * 100.0 / 150.0) / 100.0];
+  textSize(14);
+  fill(0);
+  text("  "+end_r + " + " + end_i + " i", end_r, end_i);
+
+
 }
