@@ -55,7 +55,7 @@ function setup() {
   // mangle
   var m_div = createDiv("m: ");
   m_text = createElement("input", type="text");
-  m_slider = createSlider(1, 500, 1, 1);
+  m_slider = createSlider(6, 1000, 1, 1);
   m_div.id("m_div");
   m_text.parent("m_div");
   m_slider.style('width', '260px');
@@ -146,16 +146,26 @@ function draw() {
   frameRate(900);
   translate(width / 2, height / 2);
   background(255,245,255);
+  textSize(14);
 
   // coordinate axes
-  line(0,-500,0,500);
-  line(-500,0,500,0);
+  line(0,-1 * height,0, height);
+  text("Real-axis", width / 2 - 60, 15);
+  line(-1 * width,0, width,0);
+  text("Imaginary-axis", 5, -1 * height/2 + 15);
 
   // ticks on the axes
-  line(-1 * scale, -10, -1 * scale, 10);
-  line(scale, -10, scale, 10);
-  line(-10, scale, 10, scale);
-  line(-10, -1 * scale, 10, -1 * scale);
+
+  line(-1 * scale, -5, -1 * scale, 5);
+  line(scale, -5, scale, 5);
+  line(-5, scale, 5, scale);
+  line(-5, -1 * scale, 5, -1 * scale);
+
+  text("-1", -1 * scale, 15);
+  text("1", scale, 15);
+  text("i", 10, -1 * scale + 2);
+  text("-i", 10, scale + 2);
+
 
   // prioritizing input source
   if (active_input_base == "base_slider"){
