@@ -1,4 +1,4 @@
-
+scale
 // mangle number variables
 var m_slider;
 var m_text;
@@ -47,11 +47,11 @@ function power_b_text_press() {active_input_b_power = "none"; }
 
 
 
-var scale = 150;
+var scale;
 
 function setup() {
-  createCanvas(800, 600);
-
+  createCanvas(600, 600);
+  scale = width / 8;
   // mangle
   var m_div = createDiv("m: ");
   m_text = createElement("input", type="text");
@@ -134,18 +134,12 @@ function calculatePoints(base, m, p_a, p_b){
   // r for running
   var r_a = 1.0;
   var r_b = 0.0;
-
-  point_list.push([r_a * 150.0, r_b* -150.0]);
+  point_list.push([r_a * scale, r_b * - 1 * scale]);
   for (var x = 0; x < m; x++){
     [r_a, r_b] = [(r_a * f_a) - (r_b * f_b), (r_a * f_b) + (r_b * f_a)];
-
-
-
-    point_list.push([r_a * 150.0, r_b* -150.0]);
-
+    point_list.push([r_a * scale, r_b* - 1 * scale]);
   }
   return point_list;
-
 }
 
 function draw() {
@@ -158,10 +152,10 @@ function draw() {
   line(-500,0,500,0);
 
   // ticks on the axes
-  line(-150, -10, -150, 10);
-  line(150, -10, 150, 10);
-  line(-10, 150, 10, 150);
-  line(-10, -150, 10, -150);
+  line(-1 * scale, -10, -1 * scale, 10);
+  line(scale, -10, scale, 10);
+  line(-10, scale, 10, scale);
+  line(-10, -1 * scale, 10, -1 * scale);
 
   // prioritizing input source
   if (active_input_base == "base_slider"){
@@ -189,7 +183,11 @@ function draw() {
 
   // draw input_point
   fill(0,255,0);
-  ellipse(power_a, power_b, 5,5);
+  ellipse(power_a * scale, power_b * scale, 8, 8);
+  [in_r, in_i] = [Math.round(power_a * 100.0) / 100.0, Math.round(power_b * 100.0) / 100.0];
+  textSize(12);
+  fill(0);
+  text("  input:\n  " + in_r + " + " + in_i + " i", power_a * scale, power_b * scale);
 
   // draw curve
   point_list = calculatePoints(base_val, m_val, power_a, power_b);
@@ -203,14 +201,14 @@ function draw() {
   endShape();
 
   //draw endpoint with text
-  var end_r, end_i;
-  [end_r, end_i] = [point_list.slice(-1)[0][0], point_list.slice(-1)[0][1]];
+  var pos_r, pos_i;
+  [pos_r, pos_i] = [point_list.slice(-1)[0][0], point_list.slice(-1)[0][1]];
   fill(255,0,0);
-  ellipse(end_r, end_i, 8, 8);
-  [end_r, end_i] = [Math.round(end_r * 100.0 / 150.0) / 100.0, Math.round(end_i * 100.0 / 150.0) / 100.0];
-  textSize(14);
+  ellipse(pos_r, pos_i, 8, 8);
+  [end_r, end_i] = [Math.round(pos_r * 100.0 / scale) / 100.0, Math.round(pos_i * 100.0 / scale) / 100.0];
+  textSize(12);
   fill(0);
-  text("  "+end_r + " + " + end_i + " i", end_r, end_i);
+  text("  " + end_r + " + " + end_i + " i", pos_r, pos_i);
 
 
 }
