@@ -202,10 +202,11 @@ function draw() {
   // draw curve
   point_list = calculatePoints(base_val, m_val, power_a, power_b);
 
-  noFill();
-  beginShape();
+  fill(255,0,0,150);
+  beginShape(TRIANGLE_STRIP);
   point_list.forEach(function(p) {
   vertex(p[0], p[1]);
+  vertex(0,0);
 
   });
   endShape();
