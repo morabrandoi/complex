@@ -2,10 +2,19 @@ scale
 // mangle number variables
 var m_slider;
 var m_text;
+var m_inc;
+var m_dec;
 var active_input_m = "m_slider";
+
 // call back mangle functions
 function m_slider_press() {active_input_m = "m_slider"; }
 function m_text_press() {active_input_m = "none"; }
+function m_inc_press() {active_input_m = "none";
+                        m_text.value(int(m_text.value()) + 1);
+                       }
+function m_dec_press() {active_input_m = "none";
+                        m_text.value(int(m_text.value()) - 1);
+                       }
 
 
 // base variables
@@ -52,17 +61,20 @@ var scale;
 function setup() {
   createCanvas(600, 600);
   scale = width / 8;
-  // mangle
+  // m
   var m_div = createDiv("m: ");
   m_text = createElement("input", type="text");
   m_slider = createSlider(1, 1000, 6, 1);
+  m_inc = createButton("+");
+  m_dec = createButton("-");
   m_div.id("m_div");
   m_text.parent("m_div");
   m_slider.style('width', '260px');
   // m events
   m_slider.mousePressed(m_slider_press);
   m_text.mousePressed(m_text_press);
-
+  m_inc.mousePressed(m_inc_press);
+  m_dec.mousePressed(m_dec_press);
 
   // base
   var base_div = createDiv("Base value: ");
@@ -202,7 +214,7 @@ function draw() {
   // draw curve
   point_list = calculatePoints(base_val, m_val, power_a, power_b);
 
-  stroke(200,200,200,255);
+  stroke(255,0,0,70);
   fill(255,120,120,100);
   beginShape(TRIANGLE_STRIP);
   point_list.forEach(function(p) {
