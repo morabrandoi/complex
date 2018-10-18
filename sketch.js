@@ -64,7 +64,7 @@ function setup() {
   // m
   var m_div = createDiv("m: ");
   m_text = createElement("input", type="text");
-  m_slider = createSlider(1, 1000, 6, 1);
+  m_slider = createSlider(1, 1000, 1, 1);
   m_inc = createButton("+");
   m_dec = createButton("-");
   m_div.id("m_div");
