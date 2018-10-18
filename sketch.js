@@ -145,7 +145,7 @@ function calculatePoints(base, m, p_a, p_b){
 function draw() {
   frameRate(900);
   translate(width / 2, height / 2);
-  background(255,245,255);
+  background(255,255,255);
   textSize(14);
 
   // coordinate axes
@@ -193,23 +193,24 @@ function draw() {
 
   // draw input_point
   fill(0,255,0);
-  ellipse(power_a * scale, power_b * scale, 8, 8);
+  ellipse(power_a * scale, -1 * power_b * scale, 8, 8);
   [in_r, in_i] = [Math.round(power_a * 100.0) / 100.0, Math.round(power_b * 100.0) / 100.0];
   textSize(12);
   fill(0);
-  text("  input:\n  " + in_r + " + " + in_i + " i", power_a * scale, power_b * scale);
+  text("  input:\n  " + in_r + " + " + in_i + " i", power_a * scale, -1 * power_b * scale);
 
   // draw curve
   point_list = calculatePoints(base_val, m_val, power_a, power_b);
 
-  fill(255,0,0,150);
+  stroke(200,200,200,255);
+  fill(255,120,120,100);
   beginShape(TRIANGLE_STRIP);
   point_list.forEach(function(p) {
   vertex(p[0], p[1]);
   vertex(0,0);
-
   });
   endShape();
+  stroke(0,0,0);
 
   //draw endpoint with text
   var pos_r, pos_i;
@@ -219,7 +220,7 @@ function draw() {
   [end_r, end_i] = [Math.round(pos_r * 100.0 / scale) / 100.0, Math.round(pos_i * 100.0 / scale) / 100.0];
   textSize(12);
   fill(0);
-  text("  " + end_r + " + " + end_i + " i", pos_r, pos_i);
+  text("  " + end_r + " + " + (-1 * end_i) + " i", pos_r, pos_i);
 
 
 }
